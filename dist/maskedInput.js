@@ -8,6 +8,8 @@ ffpoly();
 export default {
   name: 'MaskedInput',
   render: function render(h) {
+    var _this = this;
+
     return h('input', {
       ref: 'input',
       attrs: {
@@ -25,7 +27,10 @@ export default {
         focusout: this.focusOut,
         cut: this.cut,
         copy: this.copy,
-        paste: this.paste
+        paste: this.paste,
+        focus: function focus() {
+          return _this.$emit('focus');
+        }
       }
     });
   },
@@ -80,7 +85,7 @@ export default {
 
   methods: {
     initMask: function initMask() {
-      var _this = this;
+      var _this2 = this;
 
       try {
         if (this.mask instanceof Object) {
@@ -128,10 +133,11 @@ export default {
                 }
               }
             }
+            /* eslint-enable */
           });
         }
         [].concat(_toConsumableArray(this.$refs.input.value)).reduce(function (memo, item) {
-          return _this.maskCore.input(item);
+          return _this2.maskCore.input(item);
         }, null);
         this.maskCore.setSelection({
           start: 0,
@@ -281,12 +287,12 @@ export default {
     },
     copy: function copy() {},
     paste: function paste(e) {
-      var _this2 = this;
+      var _this3 = this;
 
       e.preventDefault();
       var text = e.clipboardData.getData('text');
       [].concat(_toConsumableArray(text)).reduce(function (memo, item) {
-        return _this2.maskCore.input(item);
+        return _this3.maskCore.input(item);
       }, null);
       this.updateToCoreState();
     },
@@ -314,6 +320,7 @@ export default {
         });
         this.$emit('input', '', '');
       }
+      this.$emit('blur');
     },
     setNativeSelection: function setNativeSelection() {
       this.maskCore.selection = {
@@ -334,6 +341,9 @@ export default {
       } else {
         this.setNativeSelection();
       }
+    },
+    focus: function focus() {
+      this.$refs.input.focus();
     }
   }
 };

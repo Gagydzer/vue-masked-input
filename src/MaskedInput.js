@@ -24,6 +24,7 @@ export default {
         cut: this.cut,
         copy: this.copy,
         paste: this.paste,
+        focus: () => this.$emit('focus')
       },
     });
   },
@@ -290,6 +291,7 @@ export default {
         });
         this.$emit('input', '', '');
       }
+      this.$emit('blur')
     },
 
     setNativeSelection() {
@@ -314,5 +316,8 @@ export default {
         this.setNativeSelection();
       }
     },
+    focus() {
+      this.$refs.input.focus()
+    }
   },
 };
